@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  datastore:
+    image: singularities/datastore-emulator
+    environment:
+      - DATASTORE_PROJECT_ID=cloudruntest-362023
+      - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8082
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./data:/opt/data
+
+  web:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+          - DATASTORE_DATASET=cloudruntest-362023
+          - DATASTORE_EMULATOR_HOST=http://datastore:8082
+          - DATASTORE_EMULATOR_HOST_PATH=::1:8082/datastore
+          - DATASTORE_HOST=http://datastore:8082
+          - DATASTORE_PROJECT_ID=cloudruntest-362023
